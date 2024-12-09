@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MyNFT is ERC721, Ownable {
+contract Badge is ERC721, Ownable {
     string public baseURI;
     uint tokenIds;
     uint mintingPrice;
@@ -29,11 +29,11 @@ contract MyNFT is ERC721, Ownable {
         return baseURI;
     }
 
-    function _transfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal pure override {
+    function transferFrom(address from, address to, uint256 tokenId) public pure override {
+        require(false, "SoulBoundToken: Transfers are not allowed");
+    }
+
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public pure override {
         require(false, "SoulBoundToken: Transfers are not allowed");
     }
 
@@ -51,10 +51,10 @@ contract MyNFT is ERC721, Ownable {
         return _baseURI();
     }
 
-    function mintNFT(address recipient, address receiver_cut) payable public returns (uint256) {
+    function mintNFT(address receiver_cut) payable public returns (uint256) {
         uint256 itemId = tokenIds;
         tokenIds++;
-        _mint(recipient, itemId);
+        _mint(msg.sender, itemId);
         require(msg.value == mintingPrice, "Not match minting fee");
         address owner = owner();
         if (receiver_cut == owner) {
